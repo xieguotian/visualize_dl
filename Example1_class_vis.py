@@ -18,7 +18,7 @@ net.params['score'][1].data[...] = np.zeros(net.params['score'][1].data.shape)
 net.params['score'][0].data[:,:,:,label] = 1
 
 # visual instance
-vis_ml = visualize(iter=1000,lambda_=0.0005,nu=2)
+vis_ml = visualize(iter=1000,lambda_=0.001,nu=1)
 #initial image
 I = np.random.random(net.blobs['data'].data.shape)*10
 #I = np.ones(net.blobs['data'].data.shape)*10
@@ -27,7 +27,7 @@ I = np.random.random(net.blobs['data'].data.shape)*10
 cls_img,s = vis_ml.calc_cls_model(net,I,verbose=True)
 
 #save cls_img
-cls_img_name = 'goose.png'
+cls_img_name = './result/goose.png'
 print 'save classification image of goose to {}'.format(cls_img_name)
 imsave(cls_img_name,cls_img)
 

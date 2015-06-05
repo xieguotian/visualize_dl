@@ -72,3 +72,55 @@ class visualize(object):
         diff -= diff.min()
         diff /= diff.max()
         return [diff,fw]
+
+    def feat_reconstruct(self,net,feat, muImg=None, verbose=False):
+        """
+        reconstruction image from convolutional feat.
+            Mahendran, Aravindh, and Andrea Vedaldi. "Understanding deep image representations by inverting them." arXiv preprint arXiv:1412.0035 (2014).
+        :param net:
+        :param feat:
+        :param muImg:
+        :param verbose:
+        :return:
+        """
+        if not muImg==None:
+            Img = muImg
+        else:
+            I_shape = net.blobs['data'].data.shape
+            Img = np.random.random(I_shape)
+
+        print 'reconstructing image from feature...'
+        if verbose:
+            plt.figure(0)
+        for i in range(self.iter):
+            # net forward and backward
+            fw = net.forward(data=Img,feat=feat)
+            bw = net.backward()
+
+            diff = bw['data']
+            #diff = -diff
+
+            # calculate total gradient of image
+            diff = diff + 2*self.lambda_*Img
+
+            #update image
+            Img = Img - self.nu * diff
+
+            #show changes of image
+            if i % 100==0 and verbose:
+                print 'max-min Img:({},{}),max diff:{}'.format(Img.max(),Img.min(),diff.max())
+                print 'iter %d for class model,score %f' % (i,fw['loss'][0])
+                tmpImg = Img[0].transpose([1,2,0]).copy()
+                tmpImg -= tmpImg.min()
+                tmpImg /= tmpImg.max()
+                plt.imshow(tmpImg)
+                plt.show(block=False)
+                plt.draw()
+
+        if verbose:
+            plt.close()
+        fw = net.forward(data=Img,feat=feat)
+        Img = Img[0].transpose([1,2,0])
+        Img -= Img.min()
+        Img /= Img.max()
+        return (Img,fw)
