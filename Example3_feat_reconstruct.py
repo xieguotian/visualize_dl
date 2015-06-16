@@ -37,7 +37,7 @@ net.forward(data=input_img,feat=np.zeros(net.blobs['feat'].data.shape))
 feat = net.blobs['conv4'].data
 
 #begin reconstruct
-init_img = np.random.random(net.blobs['data'].data.shape)
+init_img = np.random.random(net.blobs['data'].data.shape)*10
 re_img,s = vis_ml.feat_reconstruct(net,feat,init_img,verbose=True)
 
 

@@ -1,0 +1,21 @@
+name: 'deconv4'
+
+input: 'data'
+input_dim: 1
+input_dim: 384
+input_dim: 13
+input_dim: 13
+
+layers {
+	type: DECONVOLUTION
+	name: 'deconv'
+	bottom: 'data'
+	top: 'deconv'
+	convolution_param {
+		num_output: 384
+		group: 2
+		kernel_size: 3
+		stride: 1
+		pad: 1
+	}
+}
