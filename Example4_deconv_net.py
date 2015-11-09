@@ -81,7 +81,7 @@ deconv.set_relu_layer('relu1')
 deconv.set_deconv_layer(deconv1,'conv1')
 
 # read image
-im = caffe.io.load_image('./data/person.JPEG')
+im = caffe.io.load_image('./data/dog.jpg')
 
 transformer = caffe.io.Transformer({'data':net.blobs['data'].data.shape})
 transformer.set_mean('data',np.load('./data/ilsvrc_2012_mean.npy').mean(1).mean(1))
@@ -102,18 +102,18 @@ deconv.set_unpool_layer(net.blobs['pool2_mask'].data,2,3,'pool2')
 deconv.set_unpool_layer(net.blobs['pool1_mask'].data,2,3,'pool1')
 
 # find top activation and reconstruction
-top_act = np.zeros(net.blobs['pool5'].data.shape)
-layer_feat_map = net.blobs['pool5'].data
+top_act = np.zeros(net.blobs['conv2'].data.shape)
+layer_feat_map = net.blobs['conv2'].data
 
 top_act[layer_feat_map==layer_feat_map.max()] = layer_feat_map.max()
-recon_feat = deconv.recon_down(top_act,'pool5')
+recon_feat = deconv.recon_down(top_act,'relu2')
 
 # show reconstruction image
 image = recon_feat[-1][0]
 image -= image.min()
 image /= image.max()
 image = image.transpose([1,2,0])
-re_image_name = './result/deconv_net_5.png'
+re_image_name = './result/dog_deconv_net_2.png'
 imsave(re_image_name,image)
 
 plt.figure(1)

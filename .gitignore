@@ -99,3 +99,9 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+data/*.png
+data/*.jpg
+result/*.jpg
+result/*.png
+data/*.caffemodel
